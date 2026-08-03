@@ -179,31 +179,13 @@ export default function ESignAgreementPage() {
             <h3 className="font-semibold text-foreground text-sm">
               Syarat & Ketentuan eSign VIDA
             </h3>
-            <div className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+            <div className="text-sm text-muted-foreground space-y-4 leading-relaxed text-justify">
               <p>
-                Dengan menandatangani kontrak ini secara elektronik menggunakan platform VIDA
-                (Penyelenggara Sertifikasi Elektronik / PSrE yang terdaftar di Kominfo RI), Anda
-                menyatakan bahwa:
+                Anda akan menggunakan tanda tangan elektronik berbasis sertifikat elektronik untuk menandatangani dokumen berjudul <strong>Formulir Layanan E-Form BPR Perdana</strong>. Sehubungan dengan hukum dan peraturan perundang-undangan yang berlaku yang mengatur mengenai Informasi dan Transaksi Elektronik (UU Nomor 11 Tahun 2008 tentang Informasi dan Transaksi Elektronik, PP Nomor 71 tahun 2018 tentang Penyelenggaraan Sistem dan Transaksi Elektronik, Peraturan Kominfo Nomor 11 Tahun 2022 tentang Tata Kelola Penyelenggaraan Sertifikasi Elektronik), Pengguna memahami bahwa tanda tangan elektronik berbasis sertifikat elektronik dalam suatu transaksi dan/atau dokumen merupakan suatu bentuk persetujuan dan penerimaan Pengguna: (1) untuk mengikatkan diri terhadap hubungan hukum dengan pihak lain yang disebutkan dalam dokumen yang bersangkutan dan/atau (2) atas seluruh informasi yang tertulis dalam dokumen tersebut.
               </p>
-              <ol className="list-decimal list-inside space-y-1.5 pl-1">
-                <li>
-                  Identitas Anda telah diverifikasi melalui proses eKYC (KTP OCR + liveness detection)
-                  yang sah secara hukum.
-                </li>
-                <li>
-                  Tanda tangan elektronik yang Anda berikan memiliki kekuatan hukum yang sama
-                  dengan tanda tangan basah sesuai{' '}
-                  <strong>UU ITE No. 11 Tahun 2008</strong> dan perubahannya.
-                </li>
-                <li>
-                  Dokumen yang ditandatangani dilindungi oleh sertifikat digital VIDA dan{' '}
-                  <strong>tidak dapat diubah</strong> setelah ditandatangani.
-                </li>
-                <li>
-                  Anda menyetujui bahwa proses penandatanganan direkam sebagai bukti hukum
-                  yang sah sesuai ketentuan Bea Materai Elektronik.
-                </li>
-              </ol>
+              <p>
+                Guna menyediakan fasilitas pembubuhan tanda tangan elektronik berbasis sertifikat elektronik, <strong>PT BPR Daya Perdana Nusantara</strong> bekerja sama dengan VIDA sebagai PSrE terdaftar di Kemenkominfo. VIDA akan melakukan penerbitan sertifikat elektronik, yang mana akan digunakan sebagai data pembuatan tanda tangan elektronik. Tanda tangan elektronik berbasis sertifikat elektronik dapat mengidentifikasi identitas penanda tangan pada dokumen yang Anda tandatangani sesuai dengan peraturan perundang-undangan yang berlaku di Indonesia. Oleh karenanya, Anda menjamin keakuratan data pribadi yang Anda sediakan dan setuju atas pemrosesan data pribadi Anda tersebut untuk tujuan penerbitan sertifikat elektronik serta layanan lain yang melekat pada sertifikat elektronik yang dilakukan oleh VIDA. Anda telah membaca, memahami, dan setuju untuk terikat pada syarat dan ketentuan layanan Penyelenggara Sertifikasi Elektronik yang terdapat pada Perjanjian Kepemilikan Sertifikat Elektronik, Kebijakan Privasi PSrE, serta Pernyataan Penyelenggaraan Sertifikasi Elektronik yang dapat diakses melalui <a href="https://repo.vida.id" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://repo.vida.id</a>
+              </p>
             </div>
 
             {/* Checkbox */}
