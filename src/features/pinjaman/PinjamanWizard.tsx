@@ -46,6 +46,7 @@ import { SummaryStep } from './steps/SummaryStep';
 import { KtpOcrUpload } from '@/features/ekyc/KtpOcrUpload';
 import { LivenessVerification } from '@/features/ekyc';
 import OTPVerification from '@/components/OTPVerification';
+import DualOTPVerification from '@/components/DualOTPVerification';
 
 import { useResumeSession } from '@/hooks/useResumeSession';
 import { ResumeSessionBanner } from '@/components/ResumeSessionBanner';
@@ -131,6 +132,7 @@ export default function PinjamanWizard() {
     { label: t('pinjaman.step3') }, // Collateral
     { label: t('pinjaman.step4') }, // KTP OCR
     { label: t('pinjaman.step5') }, // Personal Info
+    { label: "Verifikasi Kontak" }, // OTP
     { label: t('pinjaman.step6') }, // Liveness
     { label: t('pinjaman.step7') }, // Bank Account
     { label: t('pinjaman.step8') }, // Summary
@@ -162,13 +164,15 @@ export default function PinjamanWizard() {
           !!formData.additionalData.nomorHandphone &&
           !!formData.additionalData.alamatUsaha
         );
-      case 5: return formData.selfieImage !== null;
-      case 6:
+      case 5: return true;
+      case 6: return formData.selfieImage !== null;
+      case 7:
         return (
           !!formData.bankAccount.bankName &&
           !!formData.bankAccount.accountNumber &&
           !!formData.bankAccount.accountHolderName
         );
+      case 8: return true;
       default: return true;
     }
   };
@@ -301,7 +305,7 @@ export default function PinjamanWizard() {
       case 1: return handleLoanInfoNext();
       case 2: return handleCollaterralNext();
       case 4: return handlePersonalInfoNext();
-      case 6: return handleDisbursementNext();
+      case 7: return handleDisbursementNext();
       default: goNext();
     }
   };
@@ -339,7 +343,19 @@ export default function PinjamanWizard() {
       case 4:
         return <AdditionalDataStep data={formData.additionalData} onChange={(additionalData) => setFormData({ ...formData, additionalData })} />;
       case 5:
-        return phoneVerified ? (
+        return (
+          <DualOTPVerification
+            appId={appId}
+            phone={formData.additionalData.nomorHandphone}
+            email={formData.additionalData.email}
+            onComplete={() => {
+              setPhoneVerified(true);
+              goNext();
+            }}
+          />
+        );
+      case 6:
+        return (
           <LivenessVerification
             appId={appId}
             initialSelfie={formData.selfieImage}
@@ -347,23 +363,17 @@ export default function PinjamanWizard() {
             onComplete={handleLivenessComplete}
             onError={(err) => { setStepError(err); toast.error('Liveness gagal', { description: err }); }}
           />
-        ) : (
-          <OTPVerification
-            appId={appId}
-            phone={formData.additionalData.nomorHandphone}
-            onVerified={() => setPhoneVerified(true)}
-          />
         );
-      case 6:
-        return <BankAccountStep data={formData.bankAccount} onChange={(bankAccount) => setFormData({ ...formData, bankAccount })} />;
       case 7:
+        return <BankAccountStep data={formData.bankAccount} onChange={(bankAccount) => setFormData({ ...formData, bankAccount })} />;
+      case 8:
         return <SummaryStep formData={formData} />;
       default:
         return null;
     }
   };
 
-  const showNextButton = currentStep < steps.length - 1 && currentStep !== 3 && currentStep !== 5;
+  const showNextButton = currentStep < steps.length - 1 && currentStep !== 3 && currentStep !== 5 && currentStep !== 6;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

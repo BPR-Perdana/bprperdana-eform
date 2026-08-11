@@ -7,14 +7,15 @@ import { toast } from 'sonner';
 
 interface OTPVerificationProps {
   appId: string;
-  phone: string;         // nomor HP yang sudah diisi nasabah (untuk display)
-  onVerified: () => void; // callback ketika OTP berhasil diverifikasi
+  method: 'sms' | 'email';
+  contactInfo: string; // nomor HP atau email
+  onVerified: () => void;
 }
 
 const COOLDOWN_SECONDS = 60;
 const OTP_LENGTH = 4;
 
-export default function OTPVerification({ appId, phone, onVerified }: OTPVerificationProps) {
+export default function OTPVerification({ appId, method, contactInfo, onVerified }: OTPVerificationProps) {
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''));
   const [sending, setSending] = useState(false);
   const [verifying, setVerifying] = useState(false);
@@ -32,22 +33,30 @@ export default function OTPVerification({ appId, phone, onVerified }: OTPVerific
     return () => clearTimeout(timer);
   }, [cooldown]);
 
-  // Mask phone number untuk display: 0812-****-4035
-  const maskedPhone = (p: string) => {
-    const clean = p.replace(/\D/g, '');
-    if (clean.length < 6) return p;
-    return clean.slice(0, 4) + '-****-' + clean.slice(-4);
+  // Masking untuk display
+  const maskedContact = (contact: string) => {
+    if (method === 'sms') {
+      const clean = contact.replace(/\D/g, '');
+      if (clean.length < 6) return contact;
+      return clean.slice(0, 4) + '-****-' + clean.slice(-4);
+    }
+    // Email masking: a***b@domain.com
+    const parts = contact.split('@');
+    if (parts.length !== 2) return contact;
+    const name = parts[0];
+    if (name.length <= 2) return contact;
+    return `${name[0]}***${name[name.length - 1]}@${parts[1]}`;
   };
 
   const handleSend = async () => {
     setSending(true);
     setError(null);
     try {
-      await sendOTP(appId);
+      await sendOTP(appId, method);
       setSent(true);
       setCooldown(COOLDOWN_SECONDS);
       toast.success('OTP terkirim', {
-        description: `Kode OTP telah dikirim ke ${maskedPhone(phone)}`
+        description: `Kode OTP telah dikirim ke ${maskedContact(contactInfo)}`
       });
       // Focus ke input pertama
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
@@ -108,9 +117,9 @@ export default function OTPVerification({ appId, phone, onVerified }: OTPVerific
     setVerifying(true);
     setError(null);
     try {
-      await verifyOTP(appId, code);
+      await verifyOTP(appId, code, method);
       setVerified(true);
-      toast.success('Nomor HP terverifikasi!');
+      toast.success(method === 'sms' ? 'Nomor HP terverifikasi!' : 'Email terverifikasi!');
       setTimeout(() => onVerified(), 800);
     } catch (err: any) {
       const msg = err.message ?? 'Kode OTP salah';
@@ -129,8 +138,10 @@ export default function OTPVerification({ appId, phone, onVerified }: OTPVerific
         <div className="w-14 h-14 rounded-full bg-success/10 flex items-center justify-center">
           <CheckCircle2 className="w-7 h-7 text-success" />
         </div>
-        <p className="font-semibold text-foreground">Nomor HP Terverifikasi</p>
-        <p className="text-sm text-muted-foreground">{maskedPhone(phone)}</p>
+        <p className="font-semibold text-foreground">
+          {method === 'sms' ? 'Nomor HP Terverifikasi' : 'Email Terverifikasi'}
+        </p>
+        <p className="text-sm text-muted-foreground">{maskedContact(contactInfo)}</p>
       </div>
     );
   }
@@ -141,9 +152,11 @@ export default function OTPVerification({ appId, phone, onVerified }: OTPVerific
       <div className="flex items-start gap-3 p-4 bg-primary/5 rounded-lg border border-primary/20">
         <MessageSquare className="w-5 h-5 text-primary mt-0.5 shrink-0" />
         <div>
-          <p className="text-sm font-medium text-foreground">Verifikasi Nomor HP</p>
+          <p className="text-sm font-medium text-foreground">
+            {method === 'sms' ? 'Verifikasi Nomor HP' : 'Verifikasi Email'}
+          </p>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Kami perlu memastikan nomor HP Anda aktif untuk pengiriman sertifikat elektronik.
+            Kami perlu memastikan {method === 'sms' ? 'nomor HP' : 'email'} Anda aktif untuk pengiriman sertifikat elektronik.
           </p>
         </div>
       </div>
@@ -151,7 +164,7 @@ export default function OTPVerification({ appId, phone, onVerified }: OTPVerific
       {/* Nomor HP */}
       <div className="text-center">
         <p className="text-sm text-muted-foreground">OTP akan dikirim ke</p>
-        <p className="font-semibold text-foreground mt-1">{maskedPhone(phone)}</p>
+        <p className="font-semibold text-foreground mt-1">{maskedContact(contactInfo)}</p>
       </div>
 
       {/* Tombol kirim OTP */}
@@ -172,7 +185,7 @@ export default function OTPVerification({ appId, phone, onVerified }: OTPVerific
           {/* Input OTP */}
           <div>
             <p className="text-sm text-center text-muted-foreground mb-3">
-              Masukkan 4 digit kode OTP yang dikirim via SMS
+              Masukkan 4 digit kode OTP yang dikirim via {method === 'sms' ? 'SMS' : 'Email'}
             </p>
             <div className="flex justify-center gap-3" onPaste={handlePaste}>
               {otp.map((digit, i) => (

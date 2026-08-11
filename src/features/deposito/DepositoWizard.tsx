@@ -48,6 +48,7 @@ import { SummaryStep } from './steps/SummaryStep';
 import { KtpOcrUpload } from '@/features/ekyc/KtpOcrUpload';
 import { LivenessVerification } from '@/features/ekyc';
 import OTPVerification from '@/components/OTPVerification';
+import DualOTPVerification from '@/components/DualOTPVerification';
 
 
 import { useResumeSession } from '@/hooks/useResumeSession';
@@ -112,6 +113,7 @@ export default function DepositoWizard() {
     { label: t('deposito.step2') }, // Info Penempatan
     { label: t('deposito.step3') }, // KTP OCR
     { label: t('deposito.step4') }, // Data Tambahan
+    { label: "Verifikasi Kontak" }, // OTP
     { label: t('deposito.step5') }, // Liveness
     { label: t('deposito.step6') }, // Rekening Bank
     { label: t('deposito.step7') }, // Ringkasan & Submit
@@ -147,13 +149,17 @@ export default function DepositoWizard() {
           !!formData.additionalData.alamatUsaha
         );
       case 4:
-        return formData.selfieImage !== null;
+        return true;
       case 5:
+        return formData.selfieImage !== null;
+      case 6:
         return (
           !!formData.bankAccount.bankName &&
           !!formData.bankAccount.accountNumber &&
           !!formData.bankAccount.accountHolderName
         );
+      case 7:
+        return true;
       default:
         return true;
     }
@@ -387,9 +393,9 @@ export default function DepositoWizard() {
       case 1: return handleProductNext();
       // Step 2 tidak pakai handleNext — KtpOcrUpload punya onComplete sendiri
       case 3: return handlePersonalInfoNext();
-      // Step 4 tidak pakai handleNext — LivenessVerification punya onComplete sendiri
-      case 5: return handleDisbursementNext();
-      case 6: return handleFinalSubmit();
+      // Step 4 (OTP) & 5 (Liveness) handle internal
+      case 6: return handleDisbursementNext();
+      case 7: return handleFinalSubmit();
       default: goNext();
     }
   };
@@ -441,9 +447,22 @@ export default function DepositoWizard() {
         );
 
       case 4:
+        return (
+          <DualOTPVerification
+            appId={appId}
+            phone={formData.additionalData.nomorHandphone}
+            email={formData.additionalData.email}
+            onComplete={() => {
+              setPhoneVerified(true);
+              goNext();
+            }}
+          />
+        );
+
+      case 5:
         // LivenessVerification handle getToken + SDK init + submit secara internal.
         // Perlu pass appId untuk getLivenessToken(appId).
-        return phoneVerified ? (
+        return (
           <LivenessVerification
             appId={appId}
             initialSelfie={formData.selfieImage}
@@ -451,15 +470,9 @@ export default function DepositoWizard() {
             onComplete={handleLivenessComplete}
             onError={handleLivenessError}
           />
-        ) : (
-          <OTPVerification
-            appId={appId}
-            phone={formData.additionalData.nomorHandphone}
-            onVerified={() => setPhoneVerified(true)}
-          />
         );
 
-      case 5:
+      case 6:
         return (
           <BankAccountStep
             data={formData.bankAccount}
@@ -467,7 +480,7 @@ export default function DepositoWizard() {
           />
         );
 
-      case 6:
+      case 7:
         return (
           <SummaryStep
             formData={formData}
@@ -484,7 +497,8 @@ export default function DepositoWizard() {
   // Tombol "Lanjut" disembunyikan di step yang handle navigasi sendiri (OCR & Liveness)
   const showNextButton = currentStep < steps.length - 1
     && currentStep !== 2   // KtpOcrUpload handle sendiri
-    && currentStep !== 4;  // LivenessVerification handle sendiri
+    && currentStep !== 4   // DualOTPVerification handle sendiri
+    && currentStep !== 5;  // LivenessVerification handle sendiri
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
