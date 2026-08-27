@@ -309,20 +309,23 @@ export async function getApplication(appId: string) {
   return res.data.data;
 }
 
-export async function sendOTP(appId: string): Promise<void> {
-  await client.post<ApiResponse<OTPResult>>(
-    `/applications/${appId}/otp/send`
+export async function sendOTP(appId: string, method: 'sms' | 'email' = 'sms'): Promise<void> {
+  await client.post(
+    `/applications/${appId}/otp/send`,
+    { method }
   );
 }
 
 export async function verifyOTP(
   appId: string,
-  code: string
-): Promise<void> {
-  await client.post<ApiResponse<{ phone_verified: boolean }>>(
+  code: string,
+  method: 'sms' | 'email' = 'sms'
+): Promise<{ verified: boolean, method: string }> {
+  const res = await client.post<ApiResponse<{ verified: boolean, method: string }>>(
     `/applications/${appId}/otp/verify`,
-    { code }
+    { code, method }
   );
+  return res.data.data;
 }
 
 export async function uploadTransferProof(

@@ -104,7 +104,7 @@
       },
       "sertifikat_digital": {
         "title": "4. Sertifikat Digital",
-        "desc": "Sehubungan dengan verifikasi identitas untuk tujuan Pembukaan rekening online, data pribadi Anda berupa data demografi dan/atau biometrik akan diperiksa kesesuaiannya, oleh PT Indonesia Digital Identity (VIDA) sebagai mitra kami, dengan data yang tercatat pada sistem instansi pemerintahan yang berhak mengeluarkan identitas tersebut. Apabila data pribadi Anda terverifikasi kesesuaiannya, maka VIDA sebagai Penyelenggara Sertifikasi Elektronik tersertifikasi oleh Kementerian Telekomunikasi dan Informasi, akan menerbitkan sertifikat elektronik sebagai bukti bahwa data pribadi Anda telah diverifikasi dan sesuai dengan data yang tercatat pada sistem instansi yang berhak mengeluarkan identitas tersebut. Oleh karenanya, Anda menjamin keakuratan data pribadi yang Anda sediakan dan setuju atas pemrosesan data pribadi Anda tersebut untuk tujuan penerbitan sertifikat elektronik serta layanan lain yang melekat pada sertifikat elektronik yang dilakukan oleh VIDA termasuk tanda tangan digital tersebut.",
+        "desc": "Sehubungan dengan verifikasi identitas untuk tujuan Pembukaan Rekening di PT BPR Daya Perdana Nusantara, data pribadi Anda berupa data demografi dan/atau biometrik akan diperiksa kesesuaiannya, oleh PT Indonesia Digital Identity (VIDA) sebagai mitra kami, dengan data yang tercatat pada sistem instansi pemerintahan yang berhak mengeluarkan identitas tersebut. Apabila data pribadi Anda terverifikasi kesesuaiannya, maka VIDA sebagai Penyelenggara Sertifikasi Elektronik tersertifikasi oleh Kementerian Telekomunikasi dan Informasi, akan menerbitkan sertifikat elektronik sebagai bukti bahwa data pribadi Anda telah diverifikasi dan sesuai dengan data yang tercatat pada sistem instansi yang berhak mengeluarkan identitas tersebut. Oleh karenanya, Anda menjamin keakuratan data pribadi yang Anda sediakan dan setuju atas pemrosesan data pribadi Anda tersebut untuk tujuan penerbitan sertifikat elektronik serta layanan lain yang melekat pada sertifikat elektronik yang dilakukan oleh VIDA termasuk tanda tangan digital tersebut.",
         "subdesc": "Anda telah membaca, memahami, dan setuju untuk terikat pada syarat dan ketentuan layanan Penyelenggara Sertifikasi Elektronik yang terdapat pada Perjanjian Kepemilikan Sertifikat Elektronik (Subscriber Agreement), Kebijakan Privasi PSrE (CA Privacy Policy), serta Pernyataan Penyelenggaraan Sertifikasi Elektronik (Certification Practice Statement) VIDA yang dapat diakses melalui https://repo.vida.id"
       },
       "hak_nasabah": {
@@ -127,7 +127,7 @@
         ]
       }
     },
-    "agreementText": "Saya dengan ini menyatakan telah membaca, memahami, dan menyetujui syarat dan ketentuan layanan Penyelenggara Sertifikasi Elektronik serta menjamin keakuratan data pribadi saya untuk diproses lebih lanjut oleh VIDA sebagai mitra dari BPR Perdana untuk keperluan penerbitan dan pengelolaan Sertifikat Elektronik.",
+    "agreementText": "Saya dengan ini menyatakan telah membaca, memahami, dan menyetujui syarat dan ketentuan layanan Penyelenggara Sertifikasi Elektronik serta menjamin keakuratan data pribadi saya untuk diproses lebih lanjut oleh VIDA sebagai mitra dari PT BPR Daya Perdana Nusantara untuk keperluan penerbitan dan pengelolaan Sertifikat Elektronik.",
     "ktpUpload": "Unggah KTP",
     "ktpUploadDesc": "Ambil atau unggah foto KTP Anda untuk verifikasi",
     "selfie": "Ambil Selfie",

@@ -47,6 +47,7 @@ import { SummaryStep } from './steps/SummaryStep';
 import { KtpOcrUpload } from '@/features/ekyc/KtpOcrUpload';
 import { LivenessVerification } from '@/features/ekyc';
 import OTPVerification from '@/components/OTPVerification';
+import DualOTPVerification from '@/components/DualOTPVerification';
 
 import { useResumeSession } from '@/hooks/useResumeSession';
 import { ResumeSessionBanner } from '@/components/ResumeSessionBanner';
@@ -119,6 +120,7 @@ export default function TabunganWizard() {
     { label: t('tabungan.step2') },
     { label: t('tabungan.step3') },
     { label: t('tabungan.step4') },
+    { label: "Verifikasi Kontak" },
     { label: t('tabungan.step5') },
     { label: t('tabungan.step6') },
     { label: t('tabungan.step7') },
@@ -153,13 +155,17 @@ export default function TabunganWizard() {
           !!formData.additionalData.alamatUsaha
         );
       case 4:
-        return formData.selfieImage !== null;
+        return true; // DualOTPVerification handles its own validation
       case 5:
+        return formData.selfieImage !== null;
+      case 6:
         return (
           !!formData.bankAccount.bankName &&
           !!formData.bankAccount.accountNumber &&
           !!formData.bankAccount.accountHolderName
         );
+      case 7:
+        return true;
       default:
         return true;
     }
@@ -350,8 +356,8 @@ export default function TabunganWizard() {
       case 0: return handleAgreementNext();
       case 1: return handleProductNext();
       case 3: return handlePersonalInfoNext();
-      case 5: return handleDisbursementNext();
-      case 6: return handleFinalSubmit();
+      case 6: return handleDisbursementNext();
+      case 7: return handleFinalSubmit();
       default: goNext();
     }
   };
@@ -404,7 +410,20 @@ export default function TabunganWizard() {
         );
 
       case 4:
-        return phoneVerified ? (
+        return (
+          <DualOTPVerification
+            appId={appId}
+            phone={formData.additionalData.nomorHandphone}
+            email={formData.additionalData.email}
+            onComplete={() => {
+              setPhoneVerified(true);
+              goNext();
+            }}
+          />
+        );
+
+      case 5:
+        return (
           <LivenessVerification
             appId={appId}
             initialSelfie={formData.selfieImage}
@@ -412,15 +431,9 @@ export default function TabunganWizard() {
             onComplete={handleLivenessComplete}
             onError={handleLivenessError}
           />
-        ) : (
-          <OTPVerification
-            appId={appId}
-            phone={formData.additionalData.nomorHandphone}
-            onVerified={() => setPhoneVerified(true)}
-          />
         );
 
-      case 5:
+      case 6:
         return (
           <BankAccountStep
             data={formData.bankAccount}
@@ -428,7 +441,7 @@ export default function TabunganWizard() {
           />
         );
 
-      case 6:
+      case 7:
         return (
           <SummaryStep
             formData={formData}
@@ -445,7 +458,8 @@ export default function TabunganWizard() {
   const showNextButton =
     currentStep < steps.length - 1 &&
     currentStep !== 2 &&  // KtpOcrUpload handle sendiri
-    currentStep !== 4;    // LivenessVerification handle sendiri
+    currentStep !== 4 &&  // DualOTPVerification handle sendiri
+    currentStep !== 5;    // LivenessVerification handle sendiri
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
